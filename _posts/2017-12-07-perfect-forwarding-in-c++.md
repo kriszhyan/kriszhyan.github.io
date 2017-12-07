@@ -5,7 +5,7 @@ permlink: /:category/:title
 
 Let us talk about the perfect forwarding problem. Consider the following code.
 
-```C++
+{% highlight cpp %}
 void func(int& a) { cout << "called lvalue ref version" << endl; }
 void func(int&& a) { cout << "called rvalue ref version" << endl; }
 
@@ -18,7 +18,8 @@ int main() {
   wrapper(a);    // a is an lvalue
   wrapper(2);    // 2 is an rvalue
   // ...
-```
+}
+{% endhighlight %}
 
 To perfectly forward the arguments to `func`, the pre-C++11 approach was to
 overload `wrapper` for both `T&` and `const T&`. It has apparent drawbacks,
@@ -44,27 +45,32 @@ To forward the value category of `x`, the standard way is to use `std::forward`
 (or a similar cast), and write the `func` call as
 `func(std::forward<T>(x))`. `std::forward` is implemented as follows (in C++11).
 
-```C++
-template <typename T> T&& forward(typename std::remove_reference<T>::type& arg) {
+{% highlight cpp %}
+template <typename T>
+T&& forward(typename std::remove_reference<T>::type& arg) {
   return static_cast<T&&>(arg);
 }
-```
+{% endhighlight %}
 
 Now let us verify that it indeed works. Since `a` is an lvalue, `wrapper(a)`
 yields `void wrapper(int& x)` with `T = int&`. Thus `func(std::forward<T>(x))`
 becomes `func(std::forward<int&>(x))`, which collapses to
 
-```C++
-int& forward(int& arg) { return static_cast<int&>(arg); }
-```
+{% highlight cpp %}
+int& forward(int& arg) {
+  return static_cast<int&>(arg);
+}
+{% endhighlight %}
 
 On the other hand, `wrapper(2)` yields `void wrapper(int&& x)` with `T =
 int`. Thus `func(std::forward<T>(x))` becomes `func(std::forward<int>(x))`,
 which collapses to
 
-```C++
-int&& forward(int& arg) { return static_cast<int&&>(arg); }
-```
+{% highlight cpp %}
+int&& forward(int& arg) {
+  return static_cast<int&&>(arg);
+}
+{% endhighlight %}
 
 Apparently, `std::forward` does give what we want.
 
