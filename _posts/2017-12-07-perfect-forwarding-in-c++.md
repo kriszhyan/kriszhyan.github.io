@@ -1,6 +1,6 @@
 ---
-category: c++
-permlink: /:category/:title
+title: Understanding perfect forwarding in C++11/14
+category: c-and-c++
 ---
 
 Let us talk about the perfect forwarding problem. Consider the following code.
