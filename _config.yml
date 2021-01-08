@@ -24,7 +24,7 @@ github_username: kriszhyan
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-cayman
+theme: jekyll-theme-hacker
 plugins:
   - jekyll-feed
   - jekyll-sitemap
